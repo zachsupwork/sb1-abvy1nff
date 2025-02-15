@@ -1,60 +1,40 @@
 "use client";
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import { TrendingUp } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
+import { Card, CardContent, CardFooter, CardTitle } from "@components/ui/card";
+
+const chartConfig = {
+    calls: {
+        label: "Calls",
+        color: "hsl(var(--chart-1))",
+    },
+} satisfies ChartConfig;
 
 interface BarChartProps {
-  data: { date: string; calls: number }[];
+    data: { date: string; calls: number }[];
 }
 
 export function BarChartComponent({ data }: BarChartProps) {
-  const xAxisProps = {
-    dataKey: "date",
-    stroke: "#888888",
-    fontSize: 12,
-    tickLine: false,
-    axisLine: false,
-    padding: { left: 10, right: 10 }
-  };
-
-  const yAxisProps = {
-    stroke: "#888888",
-    fontSize: 12,
-    tickLine: false,
-    axisLine: false,
-    tickFormatter: (value: number) => `${value}`,
-    width: 40
-  };
-
-  const tooltipProps = {
-    cursor: { fill: "rgba(0,0,0,0.05)" },
-    contentStyle: { 
-      background: "hsl(var(--background))",
-      border: "1px solid hsl(var(--border))",
-      borderRadius: "var(--radius)",
-      padding: "8px"
-    },
-    labelStyle: {
-      color: "hsl(var(--foreground))",
-      fontWeight: 500,
-      marginBottom: "4px"
-    }
-  };
-
-  const barProps = {
-    dataKey: "calls",
-    fill: "hsl(var(--primary))",
-    radius: [4, 4, 0, 0],
-    maxBarSize: 50
-  };
-
-  return (
-    <ResponsiveContainer width="100%" height={350}>
-      <BarChart data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
-        <XAxis {...xAxisProps} />
-        <YAxis {...yAxisProps} />
-        <Tooltip {...tooltipProps} />
-        <Bar {...barProps} />
-      </BarChart>
-    </ResponsiveContainer>
-  );
+    return (
+        <Card>
+            <CardContent className="pt-6">
+                <BarChart width={500} height={300} data={data}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="date" tickLine={false} tickMargin={10} axisLine={false} interval={2} />
+                    <Bar dataKey="calls" fill="var(--color-calls)" radius={4}>
+                        <LabelList position="top" offset={12} className="fill-foreground" fontSize={10} />
+                    </Bar>
+                </BarChart>
+            </CardContent>
+            <CardFooter className="flex-col items-start gap-2 text-sm">
+                <div className="flex gap-2 font-medium leading-none">
+                    Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+                </div>
+                <div className="leading-none text-muted-foreground">
+                    Showing daily call volume for the last 30 days
+                </div>
+            </CardFooter>
+        </Card>
+    );
 }
